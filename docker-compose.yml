@@ -1,0 +1,66 @@
+version: "2"
+
+services:
+  wordpress:
+    image: "chriszarate/wordpress:4.8.0"
+    environment:
+      PHPUNIT_TEST_DIR: "/var/www/html/wp-content/themes/twentyfifteen"
+      PHPUNIT_WP_CONTENT_LINKS: "mu-plugins"
+      VIRTUAL_HOST: "${DOCKER_DEV_DOMAIN}"
+      WORDPRESS_ACTIVATE_PLUGINS: ""
+      WORDPRESS_ACTIVATE_THEME: "twentyfifteen"
+      WORDPRESS_CONFIG_EXTRA: "require_once( __DIR__ . '/local-config.php' );"
+      WORDPRESS_SITE_TITLE: "Project"
+      WORDPRESS_SITE_URL: "http://${DOCKER_DEV_DOMAIN}"
+      XDEBUG_CONFIG: "remote_host=${DOCKER_LOCAL_IP} idekey=xdebug"
+    depends_on:
+      - "mysql"
+    networks:
+      - "front"
+      - "back"
+    volumes:
+      - "./certs/ca-root/ca.crt:/tmp/certs/root.crt:ro"
+      - "./conf/php-local.ini:/usr/local/etc/php/conf.d/local.ini:ro"
+      - "./conf/wp-local-config.php:/var/www/html/local-config.php:ro"
+      - "./src/v11ea8c/plugins:/var/www/html/wp-content/plugins"
+      - "./src/v11ea8c/themes:/var/www/html/wp-content/themes"
+      - "./src/v11ea8c/vip-config:/var/www/html/wp-content/vip-config"
+      - "./src/vip-go-mu-plugins:/var/www/html/wp-content/mu-plugins"
+  photon:
+    image: "chriszarate/photon:latest"
+    networks:
+      - "front"
+  mysql:
+    image: "mariadb:10.2"
+    environment:
+      MYSQL_ALLOW_EMPTY_PASSWORD: "yes"
+      MYSQL_DATABASE: "wordpress"
+      MYSQL_ROOT_PASSWORD: ""
+    networks:
+      - "back"
+  mysql_phpunit:
+    image: "mariadb:10.2"
+    environment:
+      MYSQL_ALLOW_EMPTY_PASSWORD: "yes"
+      MYSQL_DATABASE: "wordpress_phpunit"
+      MYSQL_ROOT_PASSWORD: ""
+    networks:
+      - "back"
+  proxy:
+    image: "jwilder/nginx-proxy:alpine"
+    ports:
+      - "80:80"
+      - "443:443"
+    networks:
+      front:
+        aliases:
+          - "${DOCKER_DEV_DOMAIN}"
+    volumes:
+      - "/var/run/docker.sock:/tmp/docker.sock:ro"
+      - "./certs/self-signed:/etc/nginx/certs:ro"
+      - "./conf/nginx-proxy.conf:/etc/nginx/conf.d/proxy.conf:ro"
+      - "./conf/nginx-proxy-wordpress.conf:/etc/nginx/vhost.d/${DOCKER_DEV_DOMAIN}_location:ro"
+
+networks:
+  front: {}
+  back: {}
