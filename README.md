@@ -26,10 +26,10 @@ For an environment suitable for "classic" VIP development, check out my
 
    If you choose a different TLD, edit `.env` as well.
 
-2. Edit `setup.sh` to check out your organization’s code into the `src`
-   subfolder (replace the example repo `wpcomvip/v11ea8c` with your own). Then,
-   adjust `docker-compose.yml` to reflect your changes (replace `v11ea8c` and
-   update `WORDPRESS_ACTIVATE_THEME` to reflect your theme).
+2. Edit `setup.sh` to check out your organization’s code into the `src` folder
+   folder (replace the example repo `Automattic/vip-go-skeleton` with your own).
+   Then, adjust `docker-compose.yml` to reflect your changes (replace `vip-go-skeleton`
+   and update `WORDPRESS_ACTIVATE_THEME` to reflect your theme).
 
 3. Run `./setup.sh`.
 

@@ -20,8 +20,8 @@ mkdir -p src
 
 # Clone git repos.
 for repo in \
-  wpcomvip/v11ea8c \
-  Automattic/vip-go-mu-plugins
+  Automattic/vip-go-mu-plugins \
+  Automattic/vip-go-skeleton
 do
   # Clone repo if it is not in the "src" subfolder.
   if [ ! -d "src/${repo##*/}/.git" ]; then

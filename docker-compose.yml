@@ -4,11 +4,11 @@ services:
   wordpress:
     image: "chriszarate/wordpress:4.8.0"
     environment:
-      PHPUNIT_TEST_DIR: "/var/www/html/wp-content/themes/twentyfifteen"
-      PHPUNIT_WP_CONTENT_LINKS: "mu-plugins"
+      PHPUNIT_TEST_DIR: "/var/www/html/wp-content/themes/twentyseventeen"
+      PHPUNIT_WP_CONTENT_LINKS: "mu-plugins client-mu-plugins"
       VIRTUAL_HOST: "${DOCKER_DEV_DOMAIN}"
       WORDPRESS_ACTIVATE_PLUGINS: ""
-      WORDPRESS_ACTIVATE_THEME: "twentyfifteen"
+      WORDPRESS_ACTIVATE_THEME: "twentyseventeen"
       WORDPRESS_CONFIG_EXTRA: "require_once( __DIR__ . '/local-config.php' );"
       WORDPRESS_SITE_TITLE: "Project"
       WORDPRESS_SITE_URL: "http://${DOCKER_DEV_DOMAIN}"
@@ -22,10 +22,14 @@ services:
       - "./certs/ca-root/ca.crt:/tmp/certs/root.crt:ro"
       - "./conf/php-local.ini:/usr/local/etc/php/conf.d/local.ini:ro"
       - "./conf/wp-local-config.php:/var/www/html/local-config.php:ro"
-      - "./src/v11ea8c/plugins:/var/www/html/wp-content/plugins"
-      - "./src/v11ea8c/themes:/var/www/html/wp-content/themes"
-      - "./src/v11ea8c/vip-config:/var/www/html/wp-content/vip-config"
       - "./src/vip-go-mu-plugins:/var/www/html/wp-content/mu-plugins"
+      - "./src/vip-go-skeleton/client-mu-plugins:/var/www/html/wp-content/client-mu-plugins"
+      - "./src/vip-go-skeleton/images:/var/www/html/wp-content/images"
+      - "./src/vip-go-skeleton/languages:/var/www/html/wp-content/languages"
+      - "./src/vip-go-skeleton/plugins:/var/www/html/wp-content/plugins"
+      - "./src/vip-go-skeleton/private:/var/www/html/wp-content/private"
+      - "./src/vip-go-skeleton/themes:/var/www/html/wp-content/themes"
+      - "./src/vip-go-skeleton/vip-config:/var/www/html/wp-content/vip-config"
   photon:
     image: "chriszarate/photon:latest"
     networks:
