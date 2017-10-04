@@ -18,10 +18,10 @@ For an environment suitable for "classic" VIP development, check out my
 
 ## Set up
 
-1. Add `project.dev` (or your chosen TLD) to your `/etc/hosts` file:
+1. Add `project.test` (or your chosen TLD) to your `/etc/hosts` file:
 
    ```
-   127.0.0.1 localhost project.dev
+   127.0.0.1 localhost project.test
    ```
 
    If you choose a different TLD, edit `.env` as well.
