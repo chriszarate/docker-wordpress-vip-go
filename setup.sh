@@ -31,6 +31,13 @@ do
   fi
 done
 
+# Clone Memcached drop-in.
+if [ ! -d "src/memcached-object-cache/.git" ]; then
+  echo "Cloning Memcached object cache to \"src/memcached-object-cache\"...."
+  rm -rf src/memcached-object-cache/
+  git clone --depth=1 https://github.com/tollmanz/wordpress-pecl-memcached-object-cache.git src/memcached-object-cache
+fi
+
 # Make sure vip-go-mu-plugins is up-to-date.
 git --git-dir=src/vip-go-mu-plugins/.git --work-tree=src/vip-go-mu-plugins pull --ff-only
 

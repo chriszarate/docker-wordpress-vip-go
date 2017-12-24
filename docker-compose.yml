@@ -2,7 +2,7 @@ version: "2"
 
 services:
   wordpress:
-    image: "chriszarate/wordpress:4.8.2"
+    image: "chriszarate/wordpress:4.9.1"
     environment:
       VIRTUAL_HOST: "${DOCKER_DEV_DOMAIN}"
       WORDPRESS_ACTIVATE_PLUGINS: ""
@@ -42,6 +42,8 @@ services:
       - "back"
   proxy:
     image: "jwilder/nginx-proxy:alpine"
+    environment:
+      HSTS: "off"
     ports:
       - "80:80"
       - "443:443"

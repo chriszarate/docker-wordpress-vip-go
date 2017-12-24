@@ -63,6 +63,18 @@ will be proxied to the Photon container—simply append Photon-compatible query
 string parameters to the URL.
 
 
+## Memcached
+
+A Memcached server and `object-cache.php` drop-in are available via the separate
+`docker-compose.memcached.yml` but are not enabled by default. To use it, either
+manually merge it into the main `docker-compose.yml` or reference it explicitly
+when interacting with the stack:
+
+```
+docker-compose -f docker-compose.yml -f docker-compose.memcached.yml up -d
+```
+
+
 ## HTTPS support
 
 This repo provide HTTPS support out of the box. The setup script generates
@@ -84,7 +96,31 @@ If you do not want to use HTTPS, add `HTTPS_METHOD: "nohttps"` to the
 Multiple instances of this dev environment are possible. Make an additional copy
 of this repo with a different folder name. Then, either juggle them by stopping
 one and starting another, or modify `/etc/hosts` and `.env` to use another
-domain, e.g., `project2.dev`.
+domain, e.g., `project2.test`.
+
+
+## Troubleshooting
+
+If your stack is not responding, the most likely cause is that a container has
+stopped or failed to start. Check to see if all of the containers are "Up":
+
+```
+docker-compose ps
+```
+
+If not, inspect the logs for that container, e.g.:
+
+```
+docker-compose logs wordpress
+```
+
+Usually, the error is apparent in the logs or the last task that ran failed. If
+your `wordpress` container fails on `wp core install` or `wp plugin activate`,
+that usually means that code you are syncing to the container produces a fatal
+error that prevents WP-CLI from running.
+
+If your self-signed certs have expired (`ERR_CERT_DATE_INVALID`), simply delete
+the `certs/self-signed` directory and run `./certs/create-certs.sh`.
 
 
 [vip-go]: https://vip.wordpress.com/documentation/vip-go/
