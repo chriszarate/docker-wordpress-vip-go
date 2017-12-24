@@ -8,6 +8,8 @@ services:
       WORDPRESS_ACTIVATE_PLUGINS: ""
       WORDPRESS_ACTIVATE_THEME: "twentyseventeen"
       WORDPRESS_CONFIG_EXTRA: "require_once( __DIR__ . '/local-config.php' );"
+      WORDPRESS_DB_USER: "wordpress"
+      WORDPRESS_DB_PASSWORD: "wordpress"
       WORDPRESS_SITE_TITLE: "Project"
       WORDPRESS_SITE_URL: "http://${DOCKER_DEV_DOMAIN}"
       XDEBUG_CONFIG: "remote_host=${DOCKER_LOCAL_IP} idekey=xdebug"
@@ -35,9 +37,10 @@ services:
   mysql:
     image: "mariadb:10.2"
     environment:
-      MYSQL_ALLOW_EMPTY_PASSWORD: "yes"
       MYSQL_DATABASE: "wordpress"
-      MYSQL_ROOT_PASSWORD: ""
+      MYSQL_USER: "wordpress"
+      MYSQL_PASSWORD: "wordpress"
+      MYSQL_RANDOM_ROOT_PASSWORD: "yes"
     networks:
       - "back"
   proxy:
