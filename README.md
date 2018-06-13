@@ -1,10 +1,9 @@
 # WordPress VIP development for Docker
 
 This repo provides a Docker-based development environment for [WordPress VIP Go][vip-go]
-development. Via [chriszarate/wordpress][image], it runs on PHP7 and adds
-WP-CLI, PHPUnit, Xdebug, and the WordPress unit testing suite. It further adds
-VIP shared plugins, VIP mu-plugins, a [Photon][photon] server, and the
-development plugins provided by VIP Quickstart.
+development. It provides WordPress, MariaDB, WP-CLI, PHPUnit, and the WordPress
+unit testing suite. It further adds VIP shared plugins, VIP mu-plugins, and a
+[Photon][photon] server.
 
 If you only need Docker WordPress development environment for a single plugin or
 theme, my [docker-compose-wordpress][simple] repo is a simpler place to start.
@@ -18,28 +17,28 @@ For an environment suitable for "classic" VIP development, check out my
 
 ## Set up
 
-1. Add `project.test` (or your chosen TLD) to your `/etc/hosts` file:
+1. Clone or fork this repo.
+
+2. Add `project.test` to your `/etc/hosts` file:
 
    ```
    127.0.0.1 localhost project.test
    ```
 
-   If you choose a different TLD, edit `.env` as well.
-
-2. Edit `setup.sh` to check out your organization’s code into the `src` folder
+3. Edit `setup.sh` to check out your organization’s code into the `src` folder
    folder (replace the example repo `Automattic/vip-go-skeleton` with your own).
-   Then, adjust `docker-compose.yml` to reflect your changes (replace `vip-go-skeleton`
-   and update `WORDPRESS_ACTIVATE_THEME` to reflect your theme).
+   Then, adjust `docker-compose.yml` to reflect your changes (update the
+   `vip-go-skeleton` mapping to reflect your theme).
 
-3. Run `./setup.sh`.
+4. Run `./setup.sh`.
 
-4. Run `docker-compose up -d`.
+5. Run `docker-compose up -d`.
 
 
 ## Interacting with containers
 
 **Refer to [docker-compose-wordpress][simple] for general instructions** on how
-to interact with the stack, including WP-CLI, PHPUnit, Xdebug, and preloading
+to interact with the stack, including WP-CLI, PHPUnit, and preloading
 content.
 
 The main difference with this stack is that all code is synced to the WordPress
@@ -114,15 +113,11 @@ If not, inspect the logs for that container, e.g.:
 docker-compose logs wordpress
 ```
 
-Usually, the error is apparent in the logs or the last task that ran failed. If
-your `wordpress` container fails on `wp core install` or `wp plugin activate`,
-that usually means that code you are syncing to the container produces a fatal
-error that prevents WP-CLI from running.
-
-Running `setup.sh` again can also help resolve problems.
+Running `update.sh` again can also help resolve problems.
 
 If your self-signed certs have expired (`ERR_CERT_DATE_INVALID`), simply delete
-the `certs/self-signed` directory and run `./certs/create-certs.sh`.
+the `certs/self-signed` directory, run `./certs/create-certs.sh`, and restart
+the stack.
 
 
 [vip-go]: https://vip.wordpress.com/documentation/vip-go/

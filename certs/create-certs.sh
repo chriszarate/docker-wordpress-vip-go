@@ -1,7 +1,9 @@
 #!/usr/bin/env bash
 
+DEFAULT_DOMAIN="project.test"
+
 if [ ! -f docker-compose.yml ]; then
-  echo "Please run this script from the root of the docker-vip repo."
+  echo "Please run this script from the root of the repo."
   exit 1
 fi
 
@@ -9,8 +11,8 @@ fi
 DOMAIN=$(sed -e '/^DOCKER_DEV_DOMAIN/!d' -e 's/^DOCKER_DEV_DOMAIN[[:blank:]]*=//' -e 's/[[:blank:]]//g' .env)
 
 if [ -z "$DOMAIN" ]; then
-  echo "Could not extract DOCKER_DEV_DOMAIN from .env. No certs generated."
-  exit 1
+  echo "Could not extract DOCKER_DEV_DOMAIN from .env. Using \"$DEFAULT_DOMAIN\"."
+  DOMAIN="$DEFAULT_DOMAIN"
 fi
 
 WORKDIR="$(pwd)"
@@ -37,7 +39,7 @@ if [ ! -f "$CERT_DIR/$DOMAIN.crt" ] || [ ! -f "$CERT_DIR/$DOMAIN.key" ]; then
     -v "$CERT_DIR:/certs/out" \
     -v "$CA_ROOTDIR/ca.crt:/certs/ca.pem:ro" \
     -v "$CA_ROOTDIR/ca.key:/certs/ca-key.pem:ro" \
-    -e "CA_EXPIRE=3650" \
+    -e "SSL_EXPIRE=3650" \
     -e "SSL_DNS=*.$DOMAIN" \
     -e "SSL_CERT=/certs/out/$DOMAIN.crt" \
     -e "SSL_CSR=/certs/out/$DOMAIN.csr" \

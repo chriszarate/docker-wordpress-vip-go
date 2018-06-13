@@ -1,27 +1,46 @@
-version: "2"
+version: "3"
 
 services:
   wordpress:
-    image: "chriszarate/wordpress:4.9.1"
+    image: "wordpress:${WP_VERSION:-4.9.6}-php${PHP_VERSION:-7.2}-apache"
     environment:
-      VIRTUAL_HOST: "${DOCKER_DEV_DOMAIN}"
-      WORDPRESS_ACTIVATE_PLUGINS: ""
-      WORDPRESS_ACTIVATE_THEME: "twentyseventeen"
-      WORDPRESS_CONFIG_EXTRA: "require_once( __DIR__ . '/local-config.php' );"
-      WORDPRESS_DB_USER: "wordpress"
-      WORDPRESS_DB_PASSWORD: "wordpress"
-      WORDPRESS_SITE_TITLE: "Project"
-      WORDPRESS_SITE_URL: "http://${DOCKER_DEV_DOMAIN}"
-      XDEBUG_CONFIG: "remote_host=${DOCKER_LOCAL_IP} idekey=xdebug"
+      VIRTUAL_HOST: "${DOCKER_DEV_DOMAIN:-project.test}"
+      WORDPRESS_DB_HOST: "mysql"
+      WORDPRESS_DB_NAME: "wordpress"
+      WORDPRESS_DB_PASSWORD: ""
+      WORDPRESS_DB_USER: "root"
     depends_on:
       - "mysql"
     networks:
       - "front"
       - "back"
     volumes:
+      - "wp:/var/www/html:rw"
       - "./certs/ca-root/ca.crt:/tmp/certs/root.crt:ro"
       - "./conf/php-local.ini:/usr/local/etc/php/conf.d/local.ini:ro"
-      - "./conf/wp-local-config.php:/var/www/html/local-config.php:ro"
+      - "./conf/wp-local-config.php:/usr/local/etc/php/autoprepend.php:ro"
+      - "./src/vip-go-mu-plugins:/var/www/html/wp-content/mu-plugins"
+      - "./src/vip-go-skeleton/client-mu-plugins:/var/www/html/wp-content/client-mu-plugins"
+      - "./src/vip-go-skeleton/images:/var/www/html/wp-content/images"
+      - "./src/vip-go-skeleton/languages:/var/www/html/wp-content/languages"
+      - "./src/vip-go-skeleton/plugins:/var/www/html/wp-content/plugins"
+      - "./src/vip-go-skeleton/private:/var/www/html/wp-content/private"
+      - "./src/vip-go-skeleton/themes:/var/www/html/wp-content/themes"
+      - "./src/vip-go-skeleton/vip-config:/var/www/html/wp-content/vip-config"
+  wp-cli:
+    image: "wordpress:cli-php${PHP_VERSION:-7.2}"
+    environment:
+      - APACHE_RUN_USER="www-data"
+      - APACHE_RUN_GROUP="www-data"
+    depends_on:
+      - "mysql"
+    networks:
+      - "back"
+    volumes:
+      - "wp:/var/www/html:rw"
+      - "./bin/install-wp.sh:/usr/local/bin/install-wp:ro"
+      - "./conf/php-local.ini:/usr/local/etc/php/conf.d/local.ini:ro"
+      - "./conf/wp-local-config.php:/usr/local/etc/php/autoprepend.php:ro"
       - "./src/vip-go-mu-plugins:/var/www/html/wp-content/mu-plugins"
       - "./src/vip-go-skeleton/client-mu-plugins:/var/www/html/wp-content/client-mu-plugins"
       - "./src/vip-go-skeleton/images:/var/www/html/wp-content/images"
@@ -37,10 +56,9 @@ services:
   mysql:
     image: "mariadb:10.2"
     environment:
+      MYSQL_ALLOW_EMPTY_PASSWORD: "yes"
       MYSQL_DATABASE: "wordpress"
-      MYSQL_USER: "wordpress"
-      MYSQL_PASSWORD: "wordpress"
-      MYSQL_RANDOM_ROOT_PASSWORD: "yes"
+      MYSQL_ROOT_PASSWORD: ""
     networks:
       - "back"
   proxy:
@@ -53,7 +71,7 @@ services:
     networks:
       front:
         aliases:
-          - "${DOCKER_DEV_DOMAIN}"
+          - "${DOCKER_DEV_DOMAIN:-project.test}"
     volumes:
       - "/var/run/docker.sock:/tmp/docker.sock:ro"
       - "./certs/self-signed:/etc/nginx/certs:ro"
@@ -63,3 +81,6 @@ services:
 networks:
   front: {}
   back: {}
+
+volumes:
+  wp: {}
