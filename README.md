@@ -1,18 +1,17 @@
-# WordPress VIP development for Docker
+# WordPress VIP Go development for Docker
 
-This repo provides a Docker-based development environment for [WordPress VIP Go][vip-go]
-development. It provides WordPress, MariaDB, Memcached, WP-CLI, PHPUnit, and the
-WordPress unit testing suite. It further adds VIP shared plugins, VIP mu-plugins,
-and a [Photon][photon] server.
+This repo provides a Docker-based environment for [WordPress VIP Go][vip-go]
+development. It provides WordPress, MariaDB, Memcached, WP-CLI, and PHPUnit. It
+further adds VIP Go mu-plugins and a [Photon][photon] server to closely mimic a
+VIP Go environment.
 
-If you only need Docker WordPress development environment for a single plugin or
-theme, my [docker-compose-wordpress][simple] repo is a simpler place to start.
-
-
-# "Classic" VIP
+# "Classic" VIP and non-VIP
 
 For an environment suitable for "classic" VIP development, check out my
 [docker-wordpress-vip][vip] repo.
+
+If you only need a Docker WordPress development environment for a single plugin
+or theme, my [docker-compose-wordpress][simple] repo is a simpler place to start.
 
 
 ## Set up
