@@ -6,22 +6,31 @@ git fetch && git pull origin master && echo ""
 # Make sure src directory exists.
 mkdir -p src
 
+# Edit this value to your VIP Go repo.
+wp_repo="wpcomvip/qz"
+#wp_repo="Automattic/vip-go-skeleton"
+
 # Clone git repos.
 for repo in \
+  $wp_repo \
   Automattic/vip-go-mu-plugins \
-  Automattic/vip-go-skeleton \
   tollmanz/wordpress-pecl-memcached-object-cache
 do
+  dir_name="${repo##*/}"
+  if [ "$repo" == "$wp_repo" ]; then
+    dir_name="wp"
+  fi
+
   # Clone repo if it is not in the "src" subfolder.
-  if [ ! -d "src/${repo##*/}/.git" ]; then
+  if [ ! -d "src/$dir_name/.git" ]; then
     echo "Cloning $repo in the \"src\" subfolder...."
-    rm -rf src/${repo##*/}
-    git clone --recursive git@github.com:$repo src/${repo##*/}
+    rm -rf src/$dir_name
+    git clone --recursive git@github.com:$repo "src/$dir_name"
   fi
 
   # Make sure repos are up-to-date.
-  echo "Updating ${repo##*/}...."
-  pushd src/${repo##*/} >/dev/null && \
+  echo "Updating $repo...."
+  pushd src/$dir_name >/dev/null && \
     git pull origin master --ff-only && \
     git submodule update && \
     popd >/dev/null && \

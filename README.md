@@ -25,10 +25,7 @@ For an environment suitable for "classic" VIP development, check out my
    127.0.0.1 localhost project.test
    ```
 
-3. Edit `setup.sh` to check out your organization’s code into the `src` folder
-   folder (replace the example repo `Automattic/vip-go-skeleton` with your own).
-   Then, adjust `docker-compose.yml` to reflect your changes (update the
-   `vip-go-skeleton` mapping to reflect your theme).
+3. Edit `update.sh` to provide your VIP Go repo in the `wp_repo` variable.
 
 4. Run `./setup.sh`.
 
@@ -77,17 +74,17 @@ docker-compose -f docker-compose.yml -f docker-compose.memcached.yml up -d
 ## HTTPS support
 
 This repo provide HTTPS support out of the box. The setup script generates
-self-signed certificates for the domain specified in `.env`. You may wish to add
-the generated root certificate to your system’s trusted root certificates. This
-will allow you to browse your dev environment over HTTPS without accepting a
-browser security warning. On OS X:
+self-signed certificates for the domain specified in `.env`. To enforce the use
+of HTTPS, comment out (or remove) `HTTPS_METHOD: "nohttps"` from the
+`services/proxy/environment` section of `docker-compose.yml`.
+
+You may wish to add the generated root certificate to your system’s trusted root
+certificates. This will allow you to browse your dev environment over HTTPS
+without accepting a browser security warning. On OS X:
 
 ```sh
 sudo security add-trusted-cert -d -r trustRoot -k /Library/Keychains/System.keychain certs/ca-root/ca.crt
 ```
-
-If you do not want to use HTTPS, add `HTTPS_METHOD: "nohttps"` to the
-`services/proxy/environment` section of `docker-compose.yml`.
 
 
 ## Multiple environments

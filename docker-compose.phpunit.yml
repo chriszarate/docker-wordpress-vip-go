@@ -4,7 +4,7 @@ services:
   wordpress_phpunit:
     image: "chriszarate/wordpress-phpunit:6.0.6"
     volumes:
-      - "./src/vip-go-skeleton:/app"
+      - "./src/wp:/app"
       - "testsuite:/tmp"
   mysql_phpunit:
     image: "mariadb:10.2"
