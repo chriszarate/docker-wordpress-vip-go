@@ -1,9 +1,9 @@
 # WordPress VIP development for Docker
 
 This repo provides a Docker-based development environment for [WordPress VIP Go][vip-go]
-development. It provides WordPress, MariaDB, WP-CLI, PHPUnit, and the WordPress
-unit testing suite. It further adds VIP shared plugins, VIP mu-plugins, and a
-[Photon][photon] server.
+development. It provides WordPress, MariaDB, Memcached, WP-CLI, PHPUnit, and the
+WordPress unit testing suite. It further adds VIP shared plugins, VIP mu-plugins,
+and a [Photon][photon] server.
 
 If you only need Docker WordPress development environment for a single plugin or
 theme, my [docker-compose-wordpress][simple] repo is a simpler place to start.
@@ -32,15 +32,46 @@ For an environment suitable for "classic" VIP development, check out my
 5. Run `docker-compose up -d`.
 
 
-## Interacting with containers
+## Install WordPress
 
-**Refer to [docker-compose-wordpress][simple] for general instructions** on how
-to interact with the stack, including WP-CLI, PHPUnit, and preloading
-content.
+```sh
+docker-compose run --rm wp-cli install-wp
+```
 
-The main difference with this stack is that all code is synced to the WordPress
-container from the `src` subfolder and, generally, is assumed to be its own
-separate repo.
+Log in to `http://project.test/wp-admin/` with `wordpress` / `wordpress`.
+
+Alternatively, you can navigate to `http://project.test/` and manually perform
+the famous five-second install.
+
+
+## WP-CLI
+
+You will probably want to create a shell alias for this:
+
+```sh
+docker-compose run --rm wp-cli wp [command]
+```
+
+
+## Running tests (PHPUnit)
+
+The testing environment is provided by a separate Docker Compose file
+(`docker-compose.phpunit.yml`) to ensure isolation. To use it, you must first
+start it, then manually run your test installation script. These are example
+commands and will vary based on your test scaffold.
+
+Note that, in the PHPUnit container, your code is mapped to `/app`.
+
+```sh
+docker-compose -f docker-compose.yml -f docker-compose.phpunit.yml up -d
+docker-compose -f docker-compose.phpunit.yml run --rm wordpress_phpunit /app/bin/install-wp-tests.sh
+```
+
+Now you are ready to run PHPUnit. Repeat this command as necessary:
+
+```sh
+docker-compose -f docker-compose.phpunit.yml run --rm wordpress_phpunit phpunit
+```
 
 
 ## Configuration
