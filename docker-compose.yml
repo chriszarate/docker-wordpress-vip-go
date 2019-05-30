@@ -5,7 +5,7 @@ services:
     image: "wordpress:${WP_VERSION:-5.2.1}-php${PHP_VERSION:-7.3}-apache"
     environment:
       HTTPS_METHOD: "nohttps"
-      VIRTUAL_HOST: "${DOCKER_DEV_DOMAIN:-project.test}"
+      VIRTUAL_HOST: "${DOCKER_DEV_DOMAIN}"
       WORDPRESS_DB_HOST: "mysql"
       WORDPRESS_DB_NAME: "wordpress"
       WORDPRESS_DB_PASSWORD: ""
@@ -72,7 +72,7 @@ services:
     networks:
       front:
         aliases:
-          - "${DOCKER_DEV_DOMAIN:-project.test}"
+          - "${DOCKER_DEV_DOMAIN}"
     volumes:
       - "/var/run/docker.sock:/tmp/docker.sock:ro"
       - "./certs/self-signed:/etc/nginx/certs:ro"
