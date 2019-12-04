@@ -146,6 +146,9 @@ If your self-signed certs have expired (`ERR_CERT_DATE_INVALID`), simply delete
 the `certs/self-signed` directory, run `./certs/create-certs.sh`, and restart
 the stack.
 
+The `install-wp` script may warn you that it was unable to create the uploads directory. See [issue #3](https://github.com/chriszarate/docker-wordpress-vip-go/issues/3) for instructions on how to deal with this.
+
+If the `install-wp` script generates Wordpress database errors when you run it, comment out the wordpress VIP plugins on line 23 of `docker-compose.yml` before starting docker and running `install-wp`. Once wordpress is installed successfully you can uncomment the line. The errors seem to occur because of a [fault in the wordpress VIP plugins](https://github.com/Automattic/vip-support/issues/87).
 
 [vip-go]: https://vip.wordpress.com/documentation/vip-go/
 [photon]: https://jetpack.com/support/photon/
