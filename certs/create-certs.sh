@@ -45,7 +45,7 @@ if [ ! -f "$CERT_DIR/$DOMAIN.crt" ] || [ ! -f "$CERT_DIR/$DOMAIN.key" ]; then
     -e "SSL_CSR=/certs/out/$DOMAIN.csr" \
     -e "SSL_KEY=/certs/out/$DOMAIN.key" \
     -e "SSL_SUBJECT=$DOMAIN" \
-    paulczar/omgwtfssl:latest \
+    superseb/omgwtfssl:latest \
     > /dev/null
 else
   echo "Found key and self-signed certificate for $DOMAIN, skipping...."
